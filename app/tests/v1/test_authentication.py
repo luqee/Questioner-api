@@ -4,9 +4,9 @@ def test_user_register(client):
         'lastname': 'Nzang\'u',
         'othername': 'Kanga',
         'email': 'lukey@app.com',
-        'phoneNumber': '+254726094972',
+        'phone_number': '+254726094972',
         'username': 'Kingpin',
         'password': 'password'
     }
-    response = client.post('api/v1/auth/user/register', data=user)
+    response = client.post('api/v1/auth/user/register', json=user)
     assert response.status_code == 201

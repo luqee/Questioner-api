@@ -61,4 +61,25 @@ class QuestionerApp(object):
                 return  question
         return 'meetup not found'
     
+    def upvote(self, meetup_id, question_id):
+        for meetup in self.meetups:
+            if meetup.id == meetup_id:
+                for q in meetup.questions:
+                    if q.id == question_id:
+                        #vote on question
+                        q.votes += 1
+                        return q
+                return 'question not found'
+        return 'meetup not found'
+    
+    def downvote(self, meetup_id, question_id):
+        for meetup in self.meetups:
+            if meetup.id == meetup_id:
+                for q in meetup.questions:
+                    if q.id == question_id:
+                        #vote on question
+                        q.votes -= 1
+                        return q
+                return 'question not found'
+        return 'meetup not found'
     

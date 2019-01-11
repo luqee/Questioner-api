@@ -1,9 +1,8 @@
 from flask import Blueprint, request, jsonify
 from app.api.v1.models import user
-from app.api.v1.questioner import QuestionerApp
+from app import questioner_app
 
 auth_blue_print = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
-questioner_app = QuestionerApp()
 
 @auth_blue_print.route('/user/register', methods=['POST'])
 def register():

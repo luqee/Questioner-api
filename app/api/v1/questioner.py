@@ -7,19 +7,14 @@ class QuestionerApp(object):
         self.meetups = []
     
     def register_user(self, new_user):
-        if len(self.registered_users) == 0:
-            new_user.id = 1
-            self.registered_users.append(new_user)
-            return 'user added'
-        else:
-            # check if user exists
-            for user in self.registered_users:
-                if user.email == new_user.email:
-                    return "user already exists"
-            # Add user as they don't exist
-            new_user.id = len(self.registered_users) + 1
-            self.registered_users.append(new_user)
-            return 'user added'
+        # check if user exists
+        for user in self.registered_users:
+            if user.email == new_user.email:
+                return "user already exists"
+        # Add user as they don't exist
+        new_user.id = len(self.registered_users) + 1
+        self.registered_users.append(new_user)
+        return 'user added'
     
     def login_user(self, email, password):
         for user in self.registered_users:
@@ -53,5 +48,17 @@ class QuestionerApp(object):
             if datetime.datetime.strptime(meetup.happening_on, '%a, %d %b %Y %H:%M:%S %Z') > datetime.datetime.today():
                 result.append(meetup)
         return result
+    
+    def post_question(self, question, meetup_id, user_id):
+        for meetup in self.meetups:
+            if meetup.id == meetup_id:
+                # have found meetup
+                question.meetup = meetup_id
+                question.created_by = user_id
+                question.created_on = datetime.datetime.now()
+                question.id = len(meetup.questions) + 1
+                meetup.questions.append(question)
+                return  question
+        return 'meetup not found'
     
     

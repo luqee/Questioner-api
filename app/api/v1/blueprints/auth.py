@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify
 from app.api.v1.models import user
 from app import questioner_app
 
-auth_blue_print = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
+auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
-@auth_blue_print.route('/user/register', methods=['POST'])
+@auth_blueprint.route('/user/register', methods=['POST'])
 def register():
     data = request.get_json()
     firstname = data['firstname']
@@ -34,7 +34,7 @@ def register():
         }
         return jsonify(response), 200
 
-@auth_blue_print.route('/user/login', methods=['POST'])
+@auth_blueprint.route('/user/login', methods=['POST'])
 def login():
     data = request.get_json()
     email = data['email']

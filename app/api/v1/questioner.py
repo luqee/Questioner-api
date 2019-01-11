@@ -2,6 +2,7 @@ class QuestionerApp(object):
     def __init__(self):
         self.registered_users = []
         self.online_users = []
+        self.meetups = []
     
     def register_user(self, new_user):
         if len(self.registered_users) == 0:
@@ -25,6 +26,16 @@ class QuestionerApp(object):
                     #put user in online users list
                     self.online_users.append(user)
                     return 'login success'
+        return 'error'
+    
+    def create_meetup(self, meetup, user_id):
+        for user in self.online_users:
+            if user.id == user_id:
+                # user is logged in
+                meetup.user_id = user.id
+                meetup.id = len(self.meetups) + 1
+                self.meetups.append(meetup)
+                return 'meetup created'
         return 'error'
     # def get_user(self, email):
     #     # check if user exists

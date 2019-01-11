@@ -6,6 +6,7 @@ class Meetup(object):
         self.tags = []
         self.description = description
         self.questions = []
+        self.rsvps = []
 
 class Tag(object):
     def __init__(self, name):

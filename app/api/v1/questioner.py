@@ -83,3 +83,12 @@ class QuestionerApp(object):
                 return 'question not found'
         return 'meetup not found'
     
+    def rsvp_to_meetup(self, rsvp_item, meetup_id, user_id):
+        for meetup in self.meetups:
+            if meetup.id == meetup_id:
+                rsvp_item.meetup = meetup_id
+                rsvp_item.user = user_id
+                rsvp_item.id = len(meetup.rsvps) + 1
+                meetup.rsvps.append(rsvp_item)
+                return rsvp_item, meetup
+        return 'no such meetup'

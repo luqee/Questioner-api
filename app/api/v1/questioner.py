@@ -47,4 +47,11 @@ class QuestionerApp(object):
                 return meetup
         return 'error'
     
+    def fetch_upcoming_meetups(self):
+        result = []
+        for meetup in self.meetups:
+            if datetime.datetime.strptime(meetup.happening_on, '%a, %d %b %Y %H:%M:%S %Z') > datetime.datetime.today():
+                result.append(meetup)
+        return result
+    
     

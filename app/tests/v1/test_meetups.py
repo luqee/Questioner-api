@@ -24,7 +24,7 @@ def test_meetup_creation(client):
     meetup = {
         'topic': 'Meet of the year',
         'location': 'The I-hub',
-        'happeningOn': '13th August 2019',
+        'happeningOn': datetime.datetime.now() - datetime.timedelta(days=2),
         'tags': ['tech', 'gaming'],
         'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitatio'
     }
@@ -34,7 +34,7 @@ def create_meetup(client):
     meetup = {
         'topic': 'Meet of the year',
         'location': 'The I-hub',
-        'happeningOn': '13th August 2019',
+        'happeningOn': datetime.datetime.now() - datetime.timedelta(days=2),
         'tags': ['tech', 'gaming'],
         'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitatio'
     }
@@ -51,7 +51,7 @@ def create_meetups(client):
     meetup1 = {
         'topic': 'Meet of the year',
         'location': 'The I-hub',
-        'happeningOn': datetime.datetime.now() - datetime.timedelta(days=2),
+        'happeningOn': datetime.datetime.today() - datetime.timedelta(days=2),
         'tags': ['tech', 'gaming'],
         'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitatio'
     }
@@ -88,7 +88,7 @@ def create_meetups(client):
         'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitatio'
     }
     client.post('api/v1/meetups', json=meetup5)
-    
+
 def test_fetch_upcoming_meetups(client):
     register_admin(client)
     login_admin(client)

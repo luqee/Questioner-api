@@ -1,6 +1,7 @@
 class QuestionerApp(object):
     def __init__(self):
         self.registered_users = []
+        self.online_users = []
     
     def register_user(self, new_user):
         if len(self.registered_users) == 0:
@@ -17,9 +18,19 @@ class QuestionerApp(object):
             self.registered_users.append(new_user)
             return 'user added'
     
-    def get_user(self, email):
-        # check if user exists
+    def login_user(self, email, password):
         for user in self.registered_users:
             if user.email == email:
-                return user
-        return 'user does not exist'
+                if user.password == password:
+                    #put user in online users list
+                    self.online_users.append(user)
+                    return 'login success'
+        return 'error'
+    # def get_user(self, email):
+    #     # check if user exists
+    #     for user in self.registered_users:
+    #         if user.email == email:
+    #             return user
+    #     return 'user does not exist'
+    
+    

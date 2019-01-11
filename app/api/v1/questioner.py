@@ -37,6 +37,12 @@ class QuestionerApp(object):
                 self.meetups.append(meetup)
                 return 'meetup created'
         return 'error'
+
+    def fetch_meetup(self, meetup_id):
+        for meetup in self.meetups:
+            if meetup.id == meetup_id:
+                return meetup
+        return 'error'
     # def get_user(self, email):
     #     # check if user exists
     #     for user in self.registered_users:

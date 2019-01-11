@@ -1,3 +1,5 @@
+import datetime
+
 class QuestionerApp(object):
     def __init__(self):
         self.registered_users = []
@@ -34,6 +36,7 @@ class QuestionerApp(object):
                 # user is logged in
                 meetup.user_id = user.id
                 meetup.id = len(self.meetups) + 1
+                meetup.created_on = datetime.datetime.now()
                 self.meetups.append(meetup)
                 return 'meetup created'
         return 'error'
@@ -43,11 +46,12 @@ class QuestionerApp(object):
             if meetup.id == meetup_id:
                 return meetup
         return 'error'
-    # def get_user(self, email):
-    #     # check if user exists
-    #     for user in self.registered_users:
-    #         if user.email == email:
-    #             return user
-    #     return 'user does not exist'
+    
+    def fetch_upcoming_meetups(self):
+        result = []
+        for meetup in self.meetups:
+            if datetime.datetime.strptime(meetup.happening_on, '%a, %d %b %Y %H:%M:%S %Z') > datetime.datetime.today():
+                result.append(meetup)
+        return result
     
     

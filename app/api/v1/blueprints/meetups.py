@@ -28,7 +28,7 @@ def create_meetup():
     elif result == 'error':
         response = {
             'status': 400,
-            'data':[{'message': 'An error occurred while creating meetup'}]
+            'error': 'An error occurred while creating meetup'
         }
         return jsonify(response), 400
 
@@ -55,6 +55,31 @@ def fetch_meetup(meetup_id):
     else:
         response = {
             'status': 404,
-            'data':[{'error': 'No such meetup'}]
+            'error': 'No such meetup'
         }
         return jsonify(response), 404
+
+@meetup_blue_print.route('/meetups/upcoming/', methods=['GET'])
+def fetch_upcoming_meetups():
+    result = questioner_app.fetch_upcoming_meetups()
+    if result == []:
+        response = {
+            'status': 200,
+            'data':[]
+        }
+        return jsonify(response), 200
+    else:
+        response = {
+            'status': 200,
+            'data':[]
+        }
+        for meet in result:
+            meetup = {
+                'id': meet.id,
+                'topic': meet.topic,
+                'location': meet.location,
+                'happeningOn': meet.happening_on,
+                'tags': []
+            }
+            response['data'].append(meetup)
+        return jsonify(response), 200

@@ -95,3 +95,10 @@ def test_fetch_upcoming_meetups(client):
     create_meetups(client)
     response = client.get('api/v1/meetups/upcoming/')
     assert response.status_code == 200
+
+def test_rsvp_to_meetup(client):
+    register_admin(client)
+    login_admin(client)
+    create_meetup(client)
+    response = client.post('api/v1/meetups/1/rsvps')
+    assert response.status_code == 200

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.api.v1.models import meetup
+from app.api.v1.models import meetup, rsvp
 from app import questioner_app
 
 meetup_blueprint = Blueprint('meetup', __name__, url_prefix='/api/v1')
@@ -83,3 +83,28 @@ def fetch_upcoming_meetups():
             }
             response['data'].append(meetup)
         return jsonify(response), 200
+
+@meetup_blueprint.route('/meetups/<int:meetup_id>/rsvps', methods=['POST'])
+def rsvp_meetup(meetup_id):
+    data = request.get_json()
+    response = data['response']
+    rsvp_item = rsvp.Rsvp(response)
+    result = questioner_app.rsvp_to_meetup(rsvp_item, meetup_id, 1)
+    if isinstance(result, tuple):
+        response = {
+            'status': 200,
+            'data':[]
+        }
+        going = {
+            'meetup': result[0].meetup,
+            'status': result[0].response,
+            'topic': result[1].topic
+        }
+        response['data'].append(going)
+        return jsonify(response), 200
+    else:
+        response = {
+            'status': 400,
+            'error': 'Could not rsvp.'
+        }
+        return jsonify(response), 400

@@ -100,5 +100,8 @@ def test_rsvp_to_meetup(client):
     register_admin(client)
     login_admin(client)
     create_meetup(client)
-    response = client.post('api/v1/meetups/1/rsvps')
+    data ={
+        'response': 'Maybe'
+    }
+    response = client.post('api/v1/meetups/1/rsvps', json=data)
     assert response.status_code == 200

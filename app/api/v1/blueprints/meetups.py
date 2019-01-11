@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
-from app.api.v1.models import user, meetup
+from app.api.v1.models import meetup
 from app import questioner_app
 
-meetup_blue_print = Blueprint('meetup', __name__, url_prefix='/api/v1')
+meetup_blueprint = Blueprint('meetup', __name__, url_prefix='/api/v1')
 
-@meetup_blue_print.route('/meetups', methods=['POST'])
+@meetup_blueprint.route('/meetups', methods=['POST'])
 def create_meetup():
     data = request.get_json()
     topic = data['topic']
@@ -32,7 +32,7 @@ def create_meetup():
         }
         return jsonify(response), 400
 
-@meetup_blue_print.route('/meetups/<int:meetup_id>', methods=['GET'])
+@meetup_blueprint.route('/meetups/<int:meetup_id>', methods=['GET'])
 def fetch_meetup(meetup_id):
     result = questioner_app.fetch_meetup(meetup_id)
     if isinstance(result, meetup.Meetup):
@@ -59,7 +59,7 @@ def fetch_meetup(meetup_id):
         }
         return jsonify(response), 404
 
-@meetup_blue_print.route('/meetups/upcoming/', methods=['GET'])
+@meetup_blueprint.route('/meetups/upcoming/', methods=['GET'])
 def fetch_upcoming_meetups():
     result = questioner_app.fetch_upcoming_meetups()
     if result == []:

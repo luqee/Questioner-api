@@ -37,4 +37,4 @@ def test_post_meetup_question(client):
         'body': 'Why is it so difficult to do web design?'
     }
     response = client.post('api/v1/meetups/1/questions', json=question)
-    assert response.status_code == 200
+    assert response.status_code == 201

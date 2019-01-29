@@ -37,7 +37,9 @@ class QuestionerApp(object):
             if user.password == password:
                 #put user in online users list
                 self.online_users.append(user)
-                return 'Login success'
+                # Generate the access token. This will be used as the authorization header
+                access_token = user.generate_token()
+                return access_token
             else:
                 return 'Invalid credentials'
         

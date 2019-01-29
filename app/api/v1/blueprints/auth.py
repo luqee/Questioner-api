@@ -17,7 +17,7 @@ def register():
     admin = data['admin']
     
 
-    new_user = user.User(firstname, lastname, username, email, othername, phone_number, password, admin)
+    new_user = user.User(firstname=firstname, lastname=lastname, username=username, email=email, othername=othername, phone_number=phone_number, password=password, admin=admin)
     result = questioner_app.register_user(new_user)
     if result == 'User added':
         # return a response notifying the user that they registered successfully

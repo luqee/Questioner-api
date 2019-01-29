@@ -35,12 +35,12 @@ def post_question(meetup_id):
 @questions_blueprint.route('/meetups/<int:meetup_id>/questions/<int:question_id>/upvote', methods=['PATCH'])
 def upvote(meetup_id, question_id):
     res = questioner_app.upvote(meetup_id, question_id)
-    return_voting__results(res)
+    return return_voting__results(res)
 
 @questions_blueprint.route('/meetups/<int:meetup_id>/questions/<int:question_id>/downvote', methods=['PATCH'])
 def downvote(meetup_id, question_id):
     res = questioner_app.downvote(meetup_id, question_id)
-    return_voting__results(res)
+    return return_voting__results(res)
     
 def return_voting__results(res):
     if isinstance(res, question.Question):

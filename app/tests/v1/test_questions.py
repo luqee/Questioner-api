@@ -1,44 +1,7 @@
 import datetime
-admin = {
-    'firstname': 'Donald',
-    'lastname': 'Duck',
-    'othername': 'quack',
-    'email': 'admin@app.com',
-    'phone_number': '+254726094972',
-    'username': 'Kingpin',
-    'password': 'password',
-    'admin': 'true'
-}
+from app.tests.v1 import utils
 
-user = {
-    'firstname': 'Luda',
-    'lastname': 'one',
-    'othername': 'quack',
-    'email': 'user@app.com',
-    'phone_number': '+254726094972',
-    'username': 'Kingpin',
-    'password': 'password',
-    'admin': 'false'
-}
-def register_user(client, user_type):
-    if user_type == 'admin':
-        client.post('api/v1/auth/user/register', json=admin)
-    else:
-        client.post('api/v1/auth/user/register', json=user)
-    
-def login_user(client, user_type):
-    if user_type == 'admin':
-        data = {
-            'email': admin['email'],
-            'password': admin['password']
-        }
-        client.post('api/v1/auth/user/login', json=data)
-    else:
-        data = {
-            'email': user['email'],
-            'password': user['password'],
-        }
-        client.post('api/v1/auth/user/login', json=data)
+test_utils = utils.Utils()
 
 def create_meetup(client):
     meetup = {
@@ -51,8 +14,8 @@ def create_meetup(client):
     client.post('api/v1/meetups', json=meetup)
 
 def test_post_meetup_question(client):
-    register_user(client, 'admin')
-    login_user(client, 'admin')
+    test_utils.register_user(client, 'admin')
+    test_utils.login_user(client, 'admin')
     create_meetup(client)
     question = {
         'title': 'design',
@@ -62,8 +25,8 @@ def test_post_meetup_question(client):
     assert response.status_code == 201
 
 def test_upvote_question(client):
-    register_user(client, 'user')
-    login_user(client, 'user')
+    test_utils.register_user(client, 'user')
+    test_utils.login_user(client, 'user')
     create_meetup(client)
     question = {
         'title': 'design',
@@ -75,8 +38,8 @@ def test_upvote_question(client):
     assert response.status_code == 201
 
 def test_downvote_question(client):
-    register_user(client, 'user')
-    login_user(client, 'user')
+    test_utils.register_user(client, 'user')
+    test_utils.login_user(client, 'user')
     create_meetup(client)
     question = {
         'title': 'design',

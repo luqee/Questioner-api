@@ -29,10 +29,10 @@ def register():
     elif result == 'User already exists':
         # notify the user that an account with the same email is already registered
         response = {
-            'status': 200,
-            'data':[{'message': 'User already exists'}]
+            'status': 202,
+            'error': 'User already exists'
         }
-        return jsonify(response), 200
+        return jsonify(response), 202
 
 @auth_blueprint.route('/user/login', methods=['POST'])
 def login():
@@ -50,7 +50,7 @@ def login():
     elif result == 'Invalid credentials':
         # notify the user that there was an error.
         response = {
-            'status': 200,
-            'data':[{'message': 'Invalid credentials'}]
+            'status': 202,
+            'error': 'Invalid credentials'
         }
-        return jsonify(response), 200
+        return jsonify(response), 202

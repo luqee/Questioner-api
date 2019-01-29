@@ -12,5 +12,5 @@ def create_app(config_name):
     app.register_blueprint(auth.auth_blueprint)
     app.register_blueprint(meetups.meetup_blueprint)
     app.register_blueprint(questions.questions_blueprint)
-    
+
     return app

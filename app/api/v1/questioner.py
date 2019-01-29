@@ -1,4 +1,5 @@
 import datetime
+from app.api.v1 import models
 
 class QuestionerApp(object):
     def __init__(self):
@@ -6,41 +7,57 @@ class QuestionerApp(object):
         self.online_users = []
         self.meetups = []
     
-    def register_user(self, new_user):
-        # check if user exists
-        for user in self.registered_users:
-            if user.email == new_user.email:
-                return "user already exists"
-        # Add user as they don't exist
-        new_user.id = len(self.registered_users) + 1
-        self.registered_users.append(new_user)
-        return 'user added'
-    
-    def login_user(self, email, password):
+    def get_user(self, email):
         for user in self.registered_users:
             if user.email == email:
-                if user.password == password:
-                    #put user in online users list
-                    self.online_users.append(user)
-                    return 'login success'
-        return 'error'
-    
-    def create_meetup(self, meetup, user_id):
+                return user
+        return 'Not found'
+
+    def get_online_user(self, user_id):
         for user in self.online_users:
             if user.id == user_id:
-                # user is logged in
-                meetup.user_id = user.id
-                meetup.id = len(self.meetups) + 1
-                meetup.created_on = datetime.datetime.now()
-                self.meetups.append(meetup)
-                return 'meetup created'
-        return 'error'
+                return user
+        return 'Not found'
+    
+    def register_user(self, new_user):
+        # check if user exists
+        if self.get_user(new_user.email) == 'Not found':
+            # Add user as they don't exist
+            new_user.id = len(self.registered_users) + 1
+            self.registered_users.append(new_user)
+            return 'User added'
+        else:
+            return "User already exists"
+    
+    def login_user(self, email, password):
+        user = self.get_user(email)
+        if user == 'Not found':
+            return 'Invalid credentials'
+        elif isinstance(user, models.user.User):
+            if user.password == password:
+                #put user in online users list
+                self.online_users.append(user)
+                return 'Login success'
+            else:
+                return 'Invalid credentials'
+        
+    def create_meetup(self, meetup, user_id):
+        user = self.get_online_user(user_id)
+        if user == 'Not found':
+            return 'Login needed'
+        elif isinstance(user, models.user.User):
+            # user is logged in
+            meetup.user_id = user.id
+            meetup.id = len(self.meetups) + 1
+            meetup.created_on = datetime.datetime.now()
+            self.meetups.append(meetup)
+            return 'Meetup created'
 
     def fetch_meetup(self, meetup_id):
         for meetup in self.meetups:
             if meetup.id == meetup_id:
                 return meetup
-        return 'error'
+        return 'Not found'
     
     def fetch_upcoming_meetups(self):
         result = []
@@ -59,29 +76,31 @@ class QuestionerApp(object):
                 question.id = len(meetup.questions) + 1
                 meetup.questions.append(question)
                 return  question
-        return 'meetup not found'
+        return 'Meetup not found'
     
     def upvote(self, meetup_id, question_id):
-        for meetup in self.meetups:
-            if meetup.id == meetup_id:
-                for q in meetup.questions:
-                    if q.id == question_id:
-                        #vote on question
-                        q.votes += 1
-                        return q
-                return 'question not found'
-        return 'meetup not found'
+        meetup = self.fetch_meetup(meetup_id)
+        if isinstance(meetup, models.meetup.Meetup):
+            for q in meetup.questions:
+                if q.id == question_id:
+                    #vote on question
+                    q.votes += 1
+                    return q
+            return 'Question not found'
+        elif meetup == 'Not found':
+            return 'Meetup not found'
     
     def downvote(self, meetup_id, question_id):
-        for meetup in self.meetups:
-            if meetup.id == meetup_id:
-                for q in meetup.questions:
-                    if q.id == question_id:
-                        #vote on question
-                        q.votes -= 1
-                        return q
-                return 'question not found'
-        return 'meetup not found'
+        meetup = self.fetch_meetup(meetup_id)
+        if isinstance(meetup, models.meetup.Meetup):
+            for q in meetup.questions:
+                if q.id == question_id:
+                    #vote on question
+                    q.votes -= 1
+                    return q
+            return 'Question not found'
+        elif meetup == 'Not found':
+            return 'Meetup not found'
     
     def rsvp_to_meetup(self, rsvp_item, meetup_id, user_id):
         for meetup in self.meetups:

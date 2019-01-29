@@ -35,29 +35,14 @@ def post_question(meetup_id):
 @questions_blueprint.route('/meetups/<int:meetup_id>/questions/<int:question_id>/upvote', methods=['PATCH'])
 def upvote(meetup_id, question_id):
     res = questioner_app.upvote(meetup_id, question_id)
-    if isinstance(res, question.Question):
-        response = {
-            'status': 201,
-            'data':[]
-        }
-        data = {
-            'user': res.created_by,
-            'meetup': res.meetup,
-            'title': res.title,
-            'body': res.body
-        }
-        response['data'].append(data)
-        return jsonify(response), 201
-    else:
-        response = {
-            'status': 400,
-            'error': 'something went wrong'
-        }
-        return jsonify(response), 400
+    return return_voting__results(res)
 
 @questions_blueprint.route('/meetups/<int:meetup_id>/questions/<int:question_id>/downvote', methods=['PATCH'])
 def downvote(meetup_id, question_id):
     res = questioner_app.downvote(meetup_id, question_id)
+    return return_voting__results(res)
+    
+def return_voting__results(res):
     if isinstance(res, question.Question):
         response = {
             'status': 201,

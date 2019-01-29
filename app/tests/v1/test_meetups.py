@@ -1,26 +1,11 @@
 import datetime
-def register_admin(client):
-    user = {
-        'firstname': 'Donald',
-        'lastname': 'Duck',
-        'othername': 'quack',
-        'email': 'duck@app.com',
-        'phone_number': '+254726094972',
-        'username': 'Kingpin',
-        'password': 'password',
-        'admin': 'true'
-    }
-    client.post('api/v1/auth/user/register', json=user)
-def login_admin(client):
-    user = {
-        'email': 'duck@app.com',
-        'password': 'password',
-    }
-    client.post('api/v1/auth/user/login', json=user)
+from app.tests.v1 import utils
+
+test_utils = utils.Utils()
 
 def test_meetup_creation(client):
-    register_admin(client)
-    login_admin(client)
+    test_utils.register_user(client, 'admin')
+    test_utils.login_user(client, 'admin')
     meetup = {
         'topic': 'Meet of the year',
         'location': 'The I-hub',
@@ -30,6 +15,7 @@ def test_meetup_creation(client):
     }
     response = client.post('api/v1/meetups', json=meetup)
     assert response.status_code == 201
+
 def create_meetup(client):
     meetup = {
         'topic': 'Meet of the year',
@@ -41,8 +27,8 @@ def create_meetup(client):
     client.post('api/v1/meetups', json=meetup)
 
 def test_fetch_specific_meetup(client):
-    register_admin(client)
-    login_admin(client)
+    test_utils.register_user(client, 'admin')
+    test_utils.login_user(client, 'admin')
     create_meetup(client)
     response = client.get('api/v1/meetups/1')
     assert response.status_code == 200
@@ -90,15 +76,15 @@ def create_meetups(client):
     client.post('api/v1/meetups', json=meetup5)
 
 def test_fetch_upcoming_meetups(client):
-    register_admin(client)
-    login_admin(client)
+    test_utils.register_user(client, 'admin')
+    test_utils.login_user(client, 'admin')
     create_meetups(client)
     response = client.get('api/v1/meetups/upcoming/')
     assert response.status_code == 200
 
 def test_rsvp_to_meetup(client):
-    register_admin(client)
-    login_admin(client)
+    test_utils.register_user(client, 'admin')
+    test_utils.login_user(client, 'admin')
     create_meetup(client)
     data ={
         'response': 'Maybe'

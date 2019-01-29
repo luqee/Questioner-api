@@ -19,16 +19,16 @@ def create_meetup():
         new_meetup.tags.append(tag)
     
     result = questioner_app.create_meetup(new_meetup,1)
-    if result == 'meetup created':
+    if result == 'Meetup created':
         response = {
             'status': 201,
             'data':[{'message': 'Meetup record created successfully.'}]
         }
         return jsonify(response), 201
-    elif result == 'error':
+    elif result == 'Login needed':
         response = {
             'status': 400,
-            'error': 'An error occurred while creating meetup'
+            'error': 'You need to login before creating a meetup'
         }
         return jsonify(response), 400
 

@@ -17,22 +17,22 @@ def register():
     admin = data['admin']
     
 
-    new_user = user.User(firstname, lastname, username, email, othername, phone_number, password, admin)
+    new_user = user.User(firstname=firstname, lastname=lastname, username=username, email=email, othername=othername, phone_number=phone_number, password=password, admin=admin)
     result = questioner_app.register_user(new_user)
-    if result == 'user added':
+    if result == 'User added':
         # return a response notifying the user that they registered successfully
         response = {
             'status': 201,
-            'data':[{'message': 'user registered successfully'}]
+            'data':[{'message': 'User registered successfully'}]
         }
         return jsonify(response), 201
-    elif result == 'user already exists':
+    elif result == 'User already exists':
         # notify the user that an account with the same email is already registered
         response = {
-            'status': 200,
-            'data':[{'message': 'user already exists'}]
+            'status': 202,
+            'error': 'User already exists'
         }
-        return jsonify(response), 200
+        return jsonify(response), 202
 
 @auth_blueprint.route('/user/login', methods=['POST'])
 def login():
@@ -40,17 +40,17 @@ def login():
     email = data['email']
     password = data['password']
     result = questioner_app.login_user(email, password)
-    if result == 'login success':
+    if result == 'Login success':
         # return a response notifying the user that they logged in successfully
         response = {
             'status': 200,
-            'data':[{'message': 'successfull log in'}]
+            'data':[{'message': 'Successfull log in'}]
         }
         return jsonify(response), 200
-    elif result == 'error':
+    elif result == 'Invalid credentials':
         # notify the user that there was an error.
         response = {
-            'status': 200,
-            'data':[{'message': 'error logging in'}]
+            'status': 202,
+            'error': 'Invalid credentials'
         }
-        return jsonify(response), 200
+        return jsonify(response), 202

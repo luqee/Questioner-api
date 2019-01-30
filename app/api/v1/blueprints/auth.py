@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, abort, g
+from functools import wraps
 from app.api.v1.models import user
 from app import questioner_app
 
@@ -6,6 +7,7 @@ auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
 @auth_blueprint.route('/user/register', methods=['POST'])
 def register():
+    """ This method registers a user to the application."""
     data = request.get_json()
     firstname = data['firstname']
     lastname = data['lastname']
@@ -15,9 +17,15 @@ def register():
     phone_number = data['phone_number']
     password = data['password']
     admin = data['admin']
-    
 
-    new_user = user.User(firstname=firstname, lastname=lastname, username=username, email=email, othername=othername, phone_number=phone_number, password=password, admin=admin)
+
+    new_user = user.User(
+        firstname=firstname,
+        lastname=lastname, username=username,
+        email=email, othername=othername,
+        phone_number=phone_number, password=password,
+        admin=admin
+    )
     result = questioner_app.register_user(new_user)
     if result == 'User added':
         # return a response notifying the user that they registered successfully
@@ -26,31 +34,35 @@ def register():
             'data':[{'message': 'User registered successfully'}]
         }
         return jsonify(response), 201
-    elif result == 'User already exists':
-        # notify the user that an account with the same email is already registered
-        response = {
-            'status': 202,
-            'error': 'User already exists'
-        }
-        return jsonify(response), 202
+    # notify the user that an account with the same email is already registered
+    response = {
+        'status': 202,
+        'error': 'User already exists'
+    }
+    return jsonify(response), 202
 
 @auth_blueprint.route('/user/login', methods=['POST'])
 def login():
+    """ This method logs in a user into the application."""
     data = request.get_json()
     email = data['email']
     password = data['password']
     result = questioner_app.login_user(email, password)
-    if result == 'Login success':
-        # return a response notifying the user that they logged in successfully
-        response = {
-            'status': 200,
-            'data':[{'message': 'Successfull log in'}]
-        }
-        return jsonify(response), 200
-    elif result == 'Invalid credentials':
+    if result == 'Invalid credentials':
         # notify the user that there was an error.
         response = {
-            'status': 202,
+            'status': 401,
             'error': 'Invalid credentials'
         }
-        return jsonify(response), 202
+        return jsonify(response), 401
+    # return a response notifying the user that they logged in successfully
+    response_data = {
+        'status': 200,
+        'data': []
+    }
+    response_data['data'].append({
+        'message': 'Successfull log in',
+        'auth_token': result.decode()
+    })
+    return jsonify(response_data), 200
+        

@@ -29,6 +29,7 @@ def test_user_login(client):
     assert response.status_code == 200
     assert json_data['status'] == 200
     assert type(json_data['data']) == list
+    assert type(json_data['data'][0]['auth_token']) is not None
     
 
 def test_admin_login(client):
@@ -42,3 +43,4 @@ def test_admin_login(client):
     assert response.status_code == 200
     assert json_data['status'] == 200
     assert type(json_data['data']) == list
+    assert type(json_data['data'][0]['auth_token']) is not None

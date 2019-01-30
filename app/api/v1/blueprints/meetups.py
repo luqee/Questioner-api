@@ -1,10 +1,12 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 from app.api.v1.models import meetup, rsvp
 from app import questioner_app
+from app.api.v1.blueprints.decorators import authenticate
 
 meetup_blueprint = Blueprint('meetup', __name__, url_prefix='/api/v1')
 
 @meetup_blueprint.route('/meetups', methods=['POST'])
+@authenticate
 def create_meetup():
     data = request.get_json()
     topic = data['topic']
@@ -18,7 +20,7 @@ def create_meetup():
         tag = meetup.Tag(t)
         new_meetup.tags.append(tag)
     
-    result = questioner_app.create_meetup(new_meetup,1)
+    result = questioner_app.create_meetup(g.user, new_meetup)
     if result == 'Meetup created':
         response = {
             'status': 201,
@@ -85,11 +87,12 @@ def fetch_upcoming_meetups():
         return jsonify(response), 200
 
 @meetup_blueprint.route('/meetups/<int:meetup_id>/rsvps', methods=['POST'])
+@authenticate
 def rsvp_meetup(meetup_id):
     data = request.get_json()
     response = data['response']
     rsvp_item = rsvp.Rsvp(response)
-    result = questioner_app.rsvp_to_meetup(rsvp_item, meetup_id, 1)
+    result = questioner_app.rsvp_to_meetup(g.user, rsvp_item, meetup_id)
     if isinstance(result, tuple):
         response = {
             'status': 200,

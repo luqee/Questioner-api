@@ -43,7 +43,7 @@ class User(object):
         """Decodes the access token from the Authorization header."""
         try:
             # try to decode the token using our SECRET variable
-            payload = jwt.decode(token, app.config.get('SECRET_KEY'))
+            payload = jwt.decode(token, app.config.get('SECRET_KEY'), algorithms=['HS256'])
             return payload['sub']
         except jwt.ExpiredSignatureError:
             # the token is expired, return an error string

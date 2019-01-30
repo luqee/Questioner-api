@@ -53,10 +53,10 @@ def return_voting__results(res):
             'data':[]
         }
         data = {
-            'user': res.created_by,
             'meetup': res.meetup,
             'title': res.title,
-            'body': res.body
+            'body': res.body,
+            'votes': res.votes
         }
         response['data'].append(data)
         return jsonify(response), 201

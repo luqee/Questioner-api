@@ -30,6 +30,7 @@ class User(object):
                 algorithm='HS256'
             )
             print(jwt_string)
+            print(type(jwt_string))
             return jwt_string
 
         except Exception as e:
